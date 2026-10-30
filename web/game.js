@@ -39,7 +39,16 @@ function button(parent,label,fn,opt={}){
  b.onclick=()=>{beep();fn();};parent.append(b);return b;
 }
 function focusPanel(){$('#content').scrollTop=0;$('#actions').scrollTop=0;}
-function commit(fn){if(!state)return;if(fn()===false){saveError='That action is not available. Check supplies and today’s crew task.';saveBadge();return;}save();if(state.phase==='end')recordEnding();render();focusPanel();}
+function commit(fn){if(!state)return;const previousDay=state.day;if(fn()===false){saveError='That action is not available. Check supplies and today’s crew task.';saveBadge();return;}save();if(state.phase==='end')recordEnding();render();focusPanel();if(state.day>previousDay&&state.phase==='survive')animateDay();}
+function animateDay(){
+ document.querySelector('.day-transition')?.remove();
+ if(settings.reduceMotion||!state||state.phase!=='survive')return;
+ const overlay=document.createElement('div');overlay.className='day-transition';overlay.setAttribute('role','status');
+ overlay.innerHTML='<span>STILL OUT HERE</span><strong>DAY '+state.day+'</strong><small>OF 12</small>';
+ $('#game-screen').append(overlay);
+ const animation=overlay.animate([{opacity:0,transform:'translateY(8px)'},{opacity:1,transform:'translateY(0)',offset:.2},{opacity:1,transform:'translateY(0)',offset:.7},{opacity:0,transform:'translateY(-6px)'}],{duration:1100,easing:'ease-in-out'});
+ animation.finished.then(()=>overlay.remove()).catch(()=>overlay.remove());
+}
 function resources(){return'<div class="resources">'+['food','air','parts'].map(k=>'<div class="'+(state[k]<=2?'low':'')+'"><b>'+state[k]+'</b>'+names[k].toUpperCase()+'</div>').join('')+'</div>';}
 function changeText(values,negative=false){return Object.entries(values).map(([k,v])=>(negative?'−':v<0?'−':'+')+Math.abs(v)+' '+names[k]).join(' · ');}
 function portraits(){
@@ -64,7 +73,7 @@ function intro(){
 }
 function start(){const param=new URLSearchParams(location.search).get('seed');const seed=param===null?crypto.getRandomValues(new Uint32Array(1))[0]:Number(param);state=E.create(seed);replacePrompt=false;tab='log';lastSecond=-1;save();render();focusPanel();}
 function resume(){state=readSave();if(!state)return render();E.resumeClock(state);tab='log';save();render();focusPanel();}
-function menu(){if(state){E.pause(state);save();}state=null;window.OrbitState=null;replacePrompt=false;readSave();render();}
+function menu(){document.querySelector(".day-transition")?.remove();if(state){E.pause(state);save();}state=null;window.OrbitState=null;replacePrompt=false;readSave();render();}
 $('#save-menu').onclick=menu;document.querySelector('header a').onclick=e=>{e.preventDefault();menu();};
 function gather(){
  $('#phase').textContent='PACKING';$('#chapter').textContent='PACK THE POD';$('#day').textContent='00 / 12';
@@ -165,7 +174,7 @@ function render(){
 function pauseAndSave(){if(state){E.pause(state);save();}}
 document.addEventListener('visibilitychange',()=>{if(document.hidden)pauseAndSave();else if(state&&!$('#options-dialog').open){E.resumeClock(state);save();}});
 window.addEventListener('pagehide',pauseAndSave);window.addEventListener('pageshow',()=>{if(state&&!$('#options-dialog').open)E.resumeClock(state);});
-setInterval(()=>{if(!state||state.phase!=='gather'||document.hidden||$('#options-dialog').open)return;E.tick(state);const sec=Math.ceil(state.remainingMs/1000);if(state.phase!=='gather'){save();render();focusPanel();}else if(sec!==lastSecond){lastSecond=sec;const el=$('#countdown');if(el)el.textContent=sec;save();}},250);
+setInterval(()=>{if(!state||state.phase!=='gather'||document.hidden||$('#options-dialog').open)return;E.tick(state);const sec=Math.ceil(state.remainingMs/1000);if(state.phase!=='gather'){save();render();focusPanel();animateDay();}else if(sec!==lastSecond){lastSecond=sec;const el=$('#countdown');if(el)el.textContent=sec;save();}},250);
 window.LastOrbit={getState:()=>state?JSON.parse(E.serialize(state)):null};
 $('#title-options').onclick=openOptions;$('#game-options').onclick=openOptions;
 $('#close-options').onclick=()=>$('#options-dialog').close();$('#done-options').onclick=()=>$('#options-dialog').close();

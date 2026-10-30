@@ -155,9 +155,15 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  assert(await page.locator('.story-reveal span').count()>5,'Story reveals words without changing its layout');
  await page.getByRole('button',{name:'Show full story'}).click();
  assert(await page.locator('.story-reveal span').evaluateAll(spans=>spans.every(s=>getComputedStyle(s).opacity==='1')),'Skip reveals every word');
+ await page.locator('[data-choice="drift"]').click();
+ assert((await page.locator('.day-transition').textContent()).includes('DAY 2'),'Advancing a day shows the new day');
+ await page.locator('.day-transition').evaluate(el=>el.getAnimations().forEach(a=>a.finish()));
+ await page.locator('.day-transition').waitFor({state:'detached'});
+ await tab('crew');assert.equal(await page.locator('.day-transition').count(),0,'Changing tabs does not replay the day transition');await tab('log');
  await page.locator('#game-options').click();await page.getByLabel('Reduced motion').check();await page.getByRole('button',{name:'DONE',exact:true}).click();
  await tab('crew');await tab('log');
  assert.equal(await page.locator('.story-reveal').count(),0,'Reduced motion shows the complete story immediately');
+ await page.locator('[data-choice]:enabled').first().click();assert.equal(await page.locator('.day-transition').count(),0,'Reduced motion skips the day transition');
  assert.deepEqual(errors,[]);
  console.log(name+': title screen, saved options, no-scroll decisions, packing, crafts, crew, expeditions, journal, course, save/resume, complete rescue, ending collection, paused timer, auto-launch, corrupt save recovery, and small phone layout passed.');
  }finally{await browser.close();}
