@@ -10,11 +10,12 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  for(const[name,engine]of engines){
  const browser=await engine.launch(process.env.ORBIT_LOCAL_CHROME?{channel:'chrome'}:{});
  try{
- const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true});
+ const page=await browser.newPage({viewport:{width:390,height:844},deviceScaleFactor:2,isMobile:true,hasTouch:true,reducedMotion:'reduce'});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const state=()=>page.evaluate(()=>window.LastOrbit.getState());
  const tab=id=>page.locator('[data-tab="'+id+'"]').click();
  const shot=label=>page.screenshot({path:'test-results/'+name+'-'+label+'.png',fullPage:true});
+ await page.clock.install();
  await page.goto(url);await page.getByRole('button',{name:'BEGIN EVACUATION'}).waitFor();
  await shot('briefing');
  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'No iPhone horizontal overflow');
@@ -60,15 +61,15 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  assert.equal((await state()).outcome.id,'home');
  assert((await page.locator('#content').textContent()).includes('1/4'));
  await page.getByRole('button',{name:'TRY ANOTHER ORBIT'}).click();
- await page.clock.install();
+
  await page.getByRole('button',{name:'BEGIN EVACUATION'}).click();
  await page.clock.runFor(5000);
  await page.getByRole('button',{name:'SAVE & MENU'}).click();
  const snapshot=await page.evaluate(()=>JSON.parse(localStorage.getItem('last-orbit-save-v2')));
- await page.clock.fastForward(120000);
+ await page.clock.runFor(120000);
  await page.getByRole('button',{name:'RESUME SAVED RUN'}).click();
  assert(Math.abs((await state()).remainingMs-snapshot.remainingMs)<250,'Menu pauses the countdown; allow a fraction of a second after resuming');
- await page.clock.fastForward(61000);await page.clock.runFor(500);
+ await page.clock.runFor(61000);await page.clock.runFor(500);
  assert.equal((await state()).day,1,'Countdown launches automatically');
 
  // Restore a valid campaign at its visitor branch, then recruit through the UI.
@@ -102,3 +103,4 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  }finally{await browser.close();}
  }
 })().catch(error=>{console.error(error);process.exitCode=1;});
+
