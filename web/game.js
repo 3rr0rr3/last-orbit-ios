@@ -20,7 +20,7 @@ function applyOptions(){
  sound=settings.sound;window.OrbitSettings=settings;
  document.body.classList.toggle('large-text',settings.largeText);
  $('#opt-sound').checked=settings.sound;$('#opt-motion').checked=settings.reduceMotion;$('#opt-text').checked=settings.largeText;
- window.OrbitArt.setMotion(settings.reduceMotion);
+ window.OrbitArt.setMotion(settings.reduceMotion);if(settings.reduceMotion){document.getAnimations().forEach(a=>a.finish());document.querySelectorAll(".story-skip").forEach(b=>b.remove());}
 }
 function openOptions(){
  if(state?.phase==='gather'){E.pause(state);save();}
@@ -73,6 +73,17 @@ function gather(){
  for(const id of state.supplyOrder){const i=E.items.find(i=>i.id===id);button(grid,(state.packed.includes(id)?'✓ ':'')+i.name,()=>commit(()=>E.pack(state,id)),{id,kind:'pack',disabled:state.packed.includes(id)||state.packed.length>=6,detail:changeText(i.gain)});}
  button(a,'LAUNCH ESCAPE POD →',()=>commit(()=>E.launch(state)),{primary:true});
  $('#hint').textContent='Six items maximum. Menu and Options pause the timer.';
+}
+function revealStory(){
+ const story=$('#content .copy');
+ if(!story||settings.reduceMotion)return;
+ const text=story.textContent,words=text.match(/\S+\s*/g)||[];
+ story.textContent='';story.classList.add('story-reveal');
+ const animations=words.map((word,i)=>{const span=document.createElement('span');span.textContent=word;story.append(span);return span.animate([{opacity:0},{opacity:1}],{duration:110,delay:i*Math.min(40,1500/Math.max(1,words.length)),fill:'both'});});
+ const skip=document.createElement('button');skip.type='button';skip.className='story-skip';skip.textContent='Show full story';story.after(skip);
+ const finish=()=>{animations.forEach(a=>a.finish());skip.remove();};
+ story.onclick=finish;skip.onclick=finish;
+ Promise.all(animations.map(a=>a.finished.catch(()=>{}))).then(()=>skip.remove());
 }
 function logView(){
  const ev=E.event(state);
@@ -148,6 +159,7 @@ function render(){
   }
   ({log:logView,crew:crewView,workshop,expeditions,routes,journal})[tab]();
  }
+ if(state?.phase==='survive'&&tab==='log')revealStory();
  portraits();saveBadge();window.OrbitArt.redraw();window.OrbitArt.start();
 }
 function pauseAndSave(){if(state){E.pause(state);save();}}

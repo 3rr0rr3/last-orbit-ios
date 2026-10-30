@@ -149,6 +149,15 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  await visibleControls('[data-pack]');await visibleControls('#actions .primary');
  await page.getByRole('button',{name:'SAVE & MENU'}).click();
 
+ const animated=E.create(123456789,0);E.launch(animated);
+ await page.evaluate(save=>{localStorage.setItem('last-orbit-save-v2',save);localStorage.setItem('last-orbit-options-v1',JSON.stringify({sound:false,reduceMotion:false,largeText:false}));},E.serialize(animated));
+ await page.reload();await page.getByRole('button',{name:'CONTINUE'}).click();
+ assert(await page.locator('.story-reveal span').count()>5,'Story reveals words without changing its layout');
+ await page.getByRole('button',{name:'Show full story'}).click();
+ assert(await page.locator('.story-reveal span').evaluateAll(spans=>spans.every(s=>getComputedStyle(s).opacity==='1')),'Skip reveals every word');
+ await page.locator('#game-options').click();await page.getByLabel('Reduced motion').check();await page.getByRole('button',{name:'DONE',exact:true}).click();
+ await tab('crew');await tab('log');
+ assert.equal(await page.locator('.story-reveal').count(),0,'Reduced motion shows the complete story immediately');
  assert.deepEqual(errors,[]);
  console.log(name+': title screen, saved options, no-scroll decisions, packing, crafts, crew, expeditions, journal, course, save/resume, complete rescue, ending collection, paused timer, auto-launch, corrupt save recovery, and small phone layout passed.');
  }finally{await browser.close();}
