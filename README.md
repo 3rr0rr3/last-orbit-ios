@@ -43,3 +43,13 @@ For browser tests, install playwright@1.56.1, run npx playwright install chromiu
 GitHub Actions runs gameplay and mobile Chromium/WebKit checks, then compiles and tests on an iPhone simulator. It builds the iPhone device app and publishes LastOrbit-unsigned.ipa only after tests pass. Screenshots and native test results are attached to the run.
 
 **The IPA is unsigned.** Sign it with your own Apple credentials through a suitable sideloading tool before installation. Tapping a download link in Safari does not install it. No signing certificates or Apple credentials are included. App Store/TestFlight distribution needs a separately configured signed build.
+
+## Phone controls, title screen, and icon (1.2)
+
+The game now opens on a title screen with Start Game, Continue (when a save exists), and Options. In-game decisions, supplies, and bottom navigation stay on screen. Longer story and journal text scroll inside their reading area; reaching a choice never requires scrolling the page.
+
+Build and Course use compact grids. Crew profiles use Previous/Next controls. Expeditions use destination, crew, and equipment selectors with one launch button. Options offers persistent sound, larger text, reduced motion, and help. Opening Options pauses the packing clock; closing it resumes the same remaining time.
+
+The new native app icon is in ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png (1024 square, opaque RGB). A smaller copy is used on the title screen and for browser icons. The icon was created with the built-in image_gen tool; the final prompt and export details are in docs/icon-prompt.txt.
+
+Browser checks explicitly verify that choices and task controls fit on 390×844, 375×667, and 320×568 screens, both with standard and larger text. Native iPhone tests reach Start Game, Launch, and daily choices without swipe gestures, then verify save recovery after relaunch.
