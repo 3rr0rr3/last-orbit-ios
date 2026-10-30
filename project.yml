@@ -17,7 +17,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.lastorbit.game
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         MARKETING_VERSION: '1.2.0'
-        CURRENT_PROJECT_VERSION: '4'
+        CURRENT_PROJECT_VERSION: '5'
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_KEY_CFBundleDisplayName: Last Orbit
         INFOPLIST_KEY_UILaunchScreen_Generation: YES

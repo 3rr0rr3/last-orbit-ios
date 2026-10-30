@@ -91,12 +91,12 @@ function scene(t=0,still=false){
  if(s&&s.upgrades.recycler){r(51,91,21,25,ink);r(54,94,15,19,cyan);r(59,97,4,13,'#327999');}
  if(s&&s.upgrades.storage){r(299,179,25,28,ink);r(301,181,21,24,'#af7eae');r(301,191,21,2,ink);r(311,182,2,22,ink);}
  if(s&&s.upgrades.antenna){r(188,44,3,18,ink);r(176,40,27,3,cyan);r(180,44,19,2,'#af83cf');}
- const crew=s?s.crew:[{id:'mira'},{id:'juno'},{id:'bean'}],spots=crew.length===4?[[81,119],[141,124],[201,119],[261,124]]:[[102,119],[195,124],[251,124]];
+ const crew=s?s.crew:[{id:'mira'},{id:'juno'},{id:'bean'}],spots=crew.length===4?[[73,98],[136,101],[199,98],[262,101]]:[[94,98],[187,101],[250,101]];
  crew.forEach((person,i)=>{
   const[x,y]=spots[i],away=s&&s.expedition&&s.expedition.crew===person.id;
   if(away){r(x+5,207,40,2,'#c991da');c.fillStyle='#d7b5e6';c.font='6px monospace';c.fillText('ON EVA',x+11,204);return;}
   const condition=s?E.condition(s,person):'HOLDING ON',bob=reduced()?0:Math.floor(Math.sin(t/650+i)*1.2);
-  c.save();c.translate(x,y+bob);c.scale(2,2);sprite(c,person.id,condition,i===0||Math.sin(t/1000+i)>.3);c.restore();
+  c.save();c.translate(x,y+bob);c.scale(2.5,2.5);sprite(c,person.id,condition,i===0||Math.sin(t/1000+i)>.3);c.restore();
  });
  // Damage and warnings remain visible alongside crew conditions.
  if(s&&s.hull<4){r(251,91,2,13,ink);r(253,101,5,2,ink);r(257,102,2,13,ink);r(259,113,5,2,ink);}
