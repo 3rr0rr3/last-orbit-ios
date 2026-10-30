@@ -54,9 +54,13 @@ jobs:
         run: |
           DEVICE_ID=$(xcrun simctl list devices available -j | python3 -c 'import json,sys; devices=json.load(sys.stdin)["devices"]; print(next(d["udid"] for runtime,items in sorted(devices.items(), reverse=True) if "iOS" in runtime for d in items if "iPhone" in d["name"]))')
           echo "SIMULATOR_ID=$DEVICE_ID" >> "$GITHUB_ENV"
+      - name: Boot selected iPhone simulator
+        timeout-minutes: 15
+        run: xcrun simctl bootstatus "$SIMULATOR_ID" -b
       - name: Launch game and test native WebView
+        timeout-minutes: 10
         run: |
-          xcodebuild test -project LastOrbit.xcodeproj -scheme LastOrbit -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath build/simulator -resultBundlePath build/iPhoneTests.xcresult CODE_SIGNING_ALLOWED=NO
+          xcodebuild test -parallel-testing-enabled NO -maximum-concurrent-test-simulator-destinations 1 -project LastOrbit.xcodeproj -scheme LastOrbit -configuration Debug -destination "platform=iOS Simulator,id=$SIMULATOR_ID" -derivedDataPath build/simulator -resultBundlePath build/iPhoneTests.xcresult CODE_SIGNING_ALLOWED=NO
       - name: Compile iPhone device app
         run: |
           xcodebuild build -project LastOrbit.xcodeproj -scheme LastOrbit -configuration Release -sdk iphoneos -destination 'generic/platform=iOS' -derivedDataPath build/device CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO
@@ -114,3 +118,4 @@ jobs:
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
           gh release create "build-$BUILD_NUMBER" dist/LastOrbit-unsigned.ipa dist/LastOrbit-unsigned.ipa.sha256 dist/LastOrbit.zip dist/LastOrbit-icon.png --target "$COMMIT_SHA" --title "Last Orbit — build $BUILD_NUMBER" --prerelease --notes "Gameplay simulation, mobile Chromium and WebKit tests, and iPhone simulator UI test passed. This IPA is unsigned and requires signing with your own Apple credentials using a sideloading tool before installation. It cannot be installed by tapping the link in Safari."
+
