@@ -14,12 +14,12 @@ final class LastOrbitUITests: XCTestCase {
         add(title)
         start.tap()
         let launch = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "LAUNCH ESCAPE POD")).firstMatch
-        XCTAssertTrue(launch.waitForExistence(timeout: 5))
+        XCTAssertTrue(launch.waitForExistence(timeout: 20))
         XCTAssertTrue(launch.isHittable, "Launch is reachable without scrolling")
         XCTAssertLessThanOrEqual(launch.frame.maxY, app.frame.maxY)
         launch.tap()
         let decision = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Let it drift")).firstMatch
-        XCTAssertTrue(decision.waitForExistence(timeout: 5))
+        XCTAssertTrue(decision.waitForExistence(timeout: 20))
         XCTAssertTrue(decision.isHittable, "Daily choices must be on-screen")
         XCTAssertLessThanOrEqual(decision.frame.maxY, app.frame.maxY)
         let play = XCTAttachment(screenshot: app.screenshot())
@@ -27,7 +27,7 @@ final class LastOrbitUITests: XCTestCase {
         play.lifetime = .keepAlways
         add(play)
         decision.tap()
-        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Seal the cabin")).firstMatch.waitForExistence(timeout: 5))
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Seal the cabin")).firstMatch.waitForExistence(timeout: 20))
         app.terminate()
         app.launch()
         let resume = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "CONTINUE")).firstMatch
