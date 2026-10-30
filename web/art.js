@@ -4,31 +4,66 @@
 const D=root.OrbitData,ink='#17112d',cyan='#43cde7',pale='#e3daf5';
 function box(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h);}
 function sprite(c,id,condition='HOLDING ON',wave=true){
- const p=D.people[id]||D.people.mira,hair=p.hair,blue=condition==='EXHAUSTED'?'#4795be':cyan;
+ const p=D.people[id]||D.people.mira;
  const r=(x,y,w,h,color)=>box(c,x,y,w,h,color);
- // Tilted bun and stepped magenta silhouette.
- r(2,1,6,2,ink);r(1,3,10,6,ink);r(3,3,6,5,hair);r(5,7,12,3,ink);
- r(5,5,10,2,ink);r(6,7,11,3,hair);r(4,10,17,8,ink);r(6,9,12,7,hair);
- r(8,7,7,1,'#ec81cf');r(5,10,4,2,cyan);r(8,8,3,2,cyan);
- if(p.style==='sweep'){r(3,4,10,3,hair);r(15,8,5,5,hair);}
- if(p.style==='curl'){r(3,4,4,4,hair);r(7,6,3,3,hair);}
- if(p.style==='antenna'){r(10,0,2,6,ink);r(9,0,4,2,cyan);r(3,5,14,3,hair);}
- r(7,14,13,9,ink);r(8,15,11,7,pale);r(9,21,3,2,pale);r(14,21,3,1,ink);
- // Oversized round, connected goggles with single-pixel pupils.
- r(6,14,6,1,ink);r(5,15,8,5,ink);r(6,20,6,1,ink);r(14,14,6,1,ink);r(13,15,8,5,ink);r(14,20,6,1,ink);
- r(7,15,4,1,cyan);r(6,16,6,3,cyan);r(7,19,4,1,cyan);r(15,15,4,1,cyan);r(14,16,6,3,cyan);r(15,19,4,1,cyan);r(12,16,2,1,ink);
- r(9,16,1,2,ink);r(16,16,1,2,ink);
- if(condition==='EXHAUSTED'||condition==='GASPING'){r(7,16,4,1,ink);r(15,16,4,1,ink);}
- // Thin cyan uniform, white collar, black central seam.
- r(7,23,11,14,ink);r(8,24,9,12,blue);r(10,23,5,3,ink);r(11,23,3,2,pale);r(12,26,1,8,ink);r(10,33,5,1,ink);
- // Hand on hip on the left; raised greeting on the right.
- r(4,24,4,3,ink);r(3,27,3,6,ink);r(5,32,3,3,ink);r(5,26,2,2,blue);r(4,28,2,4,blue);r(6,32,2,2,pale);
- if(wave){r(18,23,3,3,ink);r(20,19,3,6,ink);r(20,16,3,4,ink);r(21,17,1,3,pale);r(18,24,2,1,blue);r(20,21,1,3,blue);}
- else{r(18,25,3,9,ink);r(18,27,2,5,blue);r(18,32,2,2,pale);}
- r(7,36,5,8,ink);r(14,36,5,8,ink);r(8,36,3,6,blue);r(15,36,3,6,blue);r(7,43,6,2,ink);r(14,43,6,2,ink);r(8,43,4,1,'#8875a5');r(15,43,4,1,'#8875a5');
- if(condition==='INJURED'){r(9,28,5,3,pale);r(11,28,1,3,'#c75eac');}
- if(condition==='HUNGRY'){r(15,25,1,2,'#7393bd');r(11,21,4,1,ink);}
+ const skin=p.skin||pale;
+ function eyes(x=9,y=17){r(x,y,2,2,ink);r(x+7,y,2,2,ink);r(x+3,y+4,3,1,ink);}
+ function boots(color){r(7,35,5,9,ink);r(14,35,5,9,ink);r(8,35,3,7,color);r(15,35,3,7,color);r(6,42,7,3,ink);r(14,42,7,3,ink);r(7,43,5,1,'#857894');r(15,43,5,1,'#857894');}
+ function arms(sleeve,raised=false){r(4,24,4,3,ink);r(3,27,3,7,ink);r(4,28,2,4,sleeve);r(5,32,3,3,ink);r(6,32,2,2,skin);
+  if(raised&&wave){r(18,24,4,3,ink);r(20,20,3,6,ink);r(20,17,3,4,ink);r(21,18,1,3,skin);r(18,25,3,1,sleeve);r(21,22,1,3,sleeve);}
+  else{r(18,25,4,10,ink);r(19,26,2,6,sleeve);r(19,32,2,2,skin);}
+ }
+ function conditionMarks(){
+  if(condition==='INJURED'){r(9,29,6,3,'#efe4d2');r(11,29,2,3,'#e1799b');}
+  if(condition==='EXHAUSTED'||condition==='GASPING'){r(7,24,12,17,'#17112d33');r(9,18,2,1,ink);r(16,18,2,1,ink);}
+  if(condition==='HUNGRY')r(12,21,3,1,ink);
+ }
+ if(id==='bean'){
+  // A compact android: square face display, antenna, ear bolts, articulated limbs.
+  r(11,2,2,7,ink);r(10,1,4,3,'#e9b969');r(5,8,15,2,ink);r(3,10,19,13,ink);
+  r(5,10,15,11,'#ded5b8');r(2,13,3,7,'#716c81');r(20,13,3,7,'#716c81');
+  r(6,12,13,8,'#25364a');r(8,14,3,3,cyan);r(15,14,3,3,cyan);r(11,18,4,1,cyan);
+  r(10,23,5,2,ink);r(5,25,16,13,ink);r(7,26,12,10,'#ded5b8');r(8,27,10,3,'#e7a052');
+  r(9,31,8,4,'#48516b');r(10,32,2,2,cyan);r(14,32,2,2,'#ef92bd');
+  r(2,26,3,9,ink);r(1,29,3,5,'#958fa4');r(2,34,4,3,ink);r(3,34,2,2,'#ded5b8');
+  r(21,26,3,9,ink);r(22,29,2,5,'#958fa4');r(20,34,4,3,ink);r(21,34,2,2,'#ded5b8');
+  r(7,38,5,5,'#716c81');r(15,38,5,5,'#716c81');r(5,42,8,3,ink);r(14,42,8,3,ink);r(7,43,5,1,'#e7a052');r(15,43,5,1,'#e7a052');
+  conditionMarks();return;
+ }
+ if(id==='mira'){
+  // Sleek violet bob, round cyan spectacles, navy captain's jacket and gold trim.
+  r(7,4,11,2,ink);r(5,6,15,3,ink);r(4,9,17,12,ink);r(6,7,12,8,p.hair);r(5,10,3,11,p.hair);
+  r(8,12,11,11,ink);r(9,13,9,9,skin);r(7,10,9,3,p.hair);r(17,11,2,4,p.hair);
+  r(6,15,7,5,ink);r(14,15,7,5,ink);r(7,16,5,3,cyan);r(15,16,5,3,cyan);r(12,16,3,1,ink);r(9,16,1,2,ink);r(17,16,1,2,ink);r(12,21,3,1,ink);
+  r(7,23,12,14,ink);r(8,24,10,12,'#4a5988');r(9,24,3,4,pale);r(14,24,3,4,pale);r(12,25,2,10,ink);
+  r(7,24,4,2,'#e4c675');r(16,24,4,2,'#e4c675');r(15,28,2,3,'#e4c675');r(8,34,10,2,'#e4c675');
+  boots('#343550');arms('#4a5988',true);
+ }else if(id==='juno'){
+  // Spiky teal undercut and welding goggles pushed up over orange work overalls.
+  r(6,5,3,4,ink);r(10,3,3,6,ink);r(14,5,5,4,ink);r(4,8,17,8,ink);
+  r(6,8,13,6,p.hair);r(7,6,2,4,p.hair);r(11,5,2,5,p.hair);r(17,7,2,4,p.hair);
+  r(6,13,14,10,ink);r(7,14,12,8,skin);r(7,11,12,3,'#e4a66c');r(8,11,4,3,'#596b86');r(14,11,4,3,'#596b86');eyes(8,16);
+  r(6,23,14,14,ink);r(7,24,12,12,'#5b4a63');r(9,24,8,12,'#e79a54');r(8,24,2,7,'#f0bc71');r(16,24,2,7,'#f0bc71');r(11,28,5,4,'#955b43');r(12,29,3,1,'#f2c87c');
+  boots('#b97545');arms('#5b4a63');
+  r(17,31,4,7,'#bfbac9');r(17,31,1,2,ink);r(20,31,1,2,ink);r(18,35,2,5,'#bfbac9');r(7,35,3,2,'#837487');
+ }else if(id==='sol'){
+  // Broad field hat, visible curls, green poncho, pale trousers and a leaf badge.
+  r(7,4,11,2,ink);r(6,6,13,6,ink);r(7,6,11,5,'#d7ba7f');r(4,11,18,3,ink);r(5,11,16,2,'#e4cc93');
+  r(5,14,16,7,ink);r(6,14,14,4,p.hair);r(7,16,12,7,ink);r(8,16,10,6,skin);r(6,16,2,5,p.hair);r(19,16,2,6,p.hair);eyes(9,17);
+  r(8,23,10,2,ink);r(6,25,14,3,ink);r(4,28,18,9,ink);r(7,25,12,11,'#74a78a');r(5,29,16,6,'#74a78a');
+  r(10,24,6,2,'#cbe0ad');r(12,26,2,9,'#4c796b');r(16,28,3,2,'#bbdb8c');r(17,27,1,4,'#bbdb8c');r(6,33,4,2,skin);r(18,33,3,2,skin);
+  boots('#d8c9b0');r(6,42,7,3,'#5a494e');r(14,42,7,3,'#5a494e');
+ }else{
+  // Asymmetric white crop, crimson flight jacket, teal scarf and messenger bag.
+  r(8,5,11,2,ink);r(6,7,15,5,ink);r(5,11,17,10,ink);r(7,7,12,5,p.hair);r(6,10,8,5,p.hair);
+  r(8,13,12,10,ink);r(9,14,10,8,skin);r(8,11,5,5,p.hair);r(18,13,3,4,'#7f7195');eyes(10,17);r(20,19,1,2,'#e8c477');
+  r(7,23,13,14,ink);r(8,24,11,12,'#b65b79');r(9,24,4,4,'#df8e9f');r(14,27,1,9,ink);
+  r(9,23,10,3,'#61c3bf');r(16,25,3,6,'#61c3bf');r(10,29,9,2,'#7f5263');r(8,32,5,6,ink);r(9,33,3,4,'#d2a473');r(10,34,1,1,'#f0d19b');
+  boots('#48445f');arms('#b65b79');r(17,34,4,2,'#df8e9f');
+ }
+ conditionMarks();
 }
+
 function portrait(canvas,id,condition){const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;c.clearRect(0,0,canvas.width,canvas.height);c.save();c.scale(2,2);sprite(c,id,condition);c.restore();}
 let last=0;
 function scene(t=0,still=false){

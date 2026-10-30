@@ -2,11 +2,11 @@
 (function(root){
 'use strict';
 const people={
- nix:{name:'Nix',role:'Courier',trait:'A new friend. Four crew use 2 rations and 2 oxygen daily.',hair:'#af438f',style:'sweep'},
- mira:{name:'Mira',role:'Commander',trait:'Protective. Low oxygen raises her stress.',hair:'#bc3d9c',style:'bun'},
- juno:{name:'Juno',role:'Engineer',trait:'Reckless. Brings extra scrap home from expeditions.',hair:'#713dab',style:'sweep'},
- bean:{name:'Bean',role:'Little android',trait:'Optimistic. Restores one morale each dawn.',hair:'#d788bf',style:'antenna'},
- sol:{name:'Sol',role:'Botanist',trait:'Patient. Grows an extra ration every third day.',hair:'#e7a566',style:'curl'}
+ nix:{name:'Nix',role:'Courier',trait:'A new friend. Four crew use 2 rations and 2 oxygen daily.',hair:'#e1d8ec',skin:'#e7bdac',style:'crop'},
+ mira:{name:'Mira',role:'Commander',trait:'Protective. Low oxygen raises her stress.',hair:'#8b4cba',skin:'#e7d2d9',style:'bob'},
+ juno:{name:'Juno',role:'Engineer',trait:'Reckless. Brings extra scrap home from expeditions.',hair:'#4ba9ad',skin:'#bb806b',style:'spikes'},
+ bean:{name:'Bean',role:'Little android',trait:'Optimistic. Restores one morale each dawn.',hair:'#ded5b8',skin:'#ded5b8',style:'robot'},
+ sol:{name:'Sol',role:'Botanist',trait:'Patient. Grows an extra ration every third day.',hair:'#543b59',skin:'#ce967d',style:'hat'}
 };
 const items=[
  {id:'rations',name:'RATION BOX',gain:{food:6}},{id:'air',name:'O2 CANISTER',gain:{air:6}},

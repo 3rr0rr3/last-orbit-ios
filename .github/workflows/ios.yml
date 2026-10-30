@@ -74,12 +74,14 @@ jobs:
           cd dist
           /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload LastOrbit-unsigned.ipa
           shasum -a 256 LastOrbit-unsigned.ipa > LastOrbit-unsigned.ipa.sha256
+          zip -q LastOrbit.zip LastOrbit-unsigned.ipa LastOrbit-unsigned.ipa.sha256
       - uses: actions/upload-artifact@v4
         with:
           name: LastOrbit-unsigned-IPA
           path: |
             dist/LastOrbit-unsigned.ipa
             dist/LastOrbit-unsigned.ipa.sha256
+            dist/LastOrbit.zip
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -106,4 +108,4 @@ jobs:
           COMMIT_SHA: ${{ github.sha }}
           BUILD_NUMBER: ${{ github.run_number }}
         run: |
-          gh release create "build-$BUILD_NUMBER" dist/LastOrbit-unsigned.ipa dist/LastOrbit-unsigned.ipa.sha256 --target "$COMMIT_SHA" --title "Last Orbit — build $BUILD_NUMBER" --prerelease --notes "Gameplay simulation, mobile Chromium and WebKit tests, and iPhone simulator UI test passed. This IPA is unsigned and requires signing with your own Apple credentials using a sideloading tool before installation. It cannot be installed by tapping the link in Safari."
+          gh release create "build-$BUILD_NUMBER" dist/LastOrbit-unsigned.ipa dist/LastOrbit-unsigned.ipa.sha256 dist/LastOrbit.zip --target "$COMMIT_SHA" --title "Last Orbit — build $BUILD_NUMBER" --prerelease --notes "Gameplay simulation, mobile Chromium and WebKit tests, and iPhone simulator UI test passed. This IPA is unsigned and requires signing with your own Apple credentials using a sideloading tool before installation. It cannot be installed by tapping the link in Safari."

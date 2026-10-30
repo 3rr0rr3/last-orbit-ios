@@ -1,6 +1,6 @@
 # Last Orbit — The Next Chapter
 
-An offline iPhone space-survival game with original pixel art inspired by the supplied reference: cyan suits, oversized cyan glasses, magenta hair buns, stepped silhouettes, and thick dark outlines.
+An offline iPhone space-survival game with chunky pixel art and five distinct crew designs: Mira in a navy captain jacket, Juno in orange mechanic overalls, Bean as a compact cream-and-orange robot, Sol in green botanical field gear, and Nix in a crimson courier jacket with a teal scarf.
 
 ## Play
 
