@@ -22,6 +22,9 @@ jobs:
       - name: Validate and test survival simulation
         run: |
           node --check web/game.js
+          node --check web/engine.js
+          node --check web/content.js
+          node --check web/art.js
           node tests/game.test.cjs
       - name: Install browser test tools
         run: |
@@ -64,6 +67,10 @@ jobs:
           test -f dist/Payload/LastOrbit.app/web/index.html
           test -f dist/Payload/LastOrbit.app/web/game.js
           test -f dist/Payload/LastOrbit.app/web/style.css
+          test -f dist/Payload/LastOrbit.app/web/engine.js
+          test -f dist/Payload/LastOrbit.app/web/content.js
+          test -f dist/Payload/LastOrbit.app/web/art.js
+          test -f dist/Payload/LastOrbit.app/web/expansion.css
           cd dist
           /usr/bin/ditto -c -k --sequesterRsrc --keepParent Payload LastOrbit-unsigned.ipa
           shasum -a 256 LastOrbit-unsigned.ipa > LastOrbit-unsigned.ipa.sha256

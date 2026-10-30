@@ -1,0 +1,27 @@
+
+/* Expansion: legible phone controls and pixel portraits. */
+header{flex-wrap:wrap;gap:12px}header button{min-height:36px}header #save-menu{margin-left:auto}header #sound{margin-left:0}
+#save-status{display:block;width:100%;font-size:8px;letter-spacing:1px;color:var(--cyan)}#save-status.warning{color:#ffb5cf}
+#tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:14px 0;border-bottom:1px solid var(--line)}#tabs[hidden]{display:none}
+#tabs .choice{margin:0;padding:10px 5px;min-height:42px;text-align:center;font-size:10px}
+#tabs [aria-pressed=true]{background:#465366;border-color:var(--cyan);color:#b7ffff}
+#panel{scroll-margin-top:12px;align-self:start}.viewport{align-self:start}
+.choice small{display:block;font-size:9px;line-height:1.7;font-weight:normal;color:#b9a5ce;margin-top:6px}
+.choice{font-size:12px}.primary{display:block;min-height:48px}.choice:disabled small{color:#c6b6d5}
+.choice:hover:disabled{background:#292039;border-color:var(--line)}
+.resources .low b{color:#ff9bbf}.collection,.run-code{font-size:9px;letter-spacing:1px;color:var(--pink)}
+.gather-head{display:flex;align-items:center;justify-content:space-between}.run-code{font-size:8px}
+.crew{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;padding:12px 8px}
+.crew>div.crew-mini{display:flex;flex-wrap:nowrap;align-items:center;gap:2px;min-width:0}
+canvas.portrait{width:45px;height:83px;flex:none;background:transparent;image-rendering:pixelated}
+.crew span{font-size:9px}.crew small{font-size:6px;line-height:1.5}.crew em{display:block;margin:7px 0 0;font-size:6px;line-height:1.6;color:var(--cyan)}
+.crew-card{display:flex;align-items:center;gap:12px;border-top:1px solid var(--line);padding-top:12px;margin-top:14px}
+.crew-card h3{font-size:17px;margin:5px 0}.crew-card h3 span{display:block;font-size:9px;font-weight:normal;color:var(--pink);margin-top:4px}
+.crew-card p{font-size:10px;line-height:1.8;color:var(--muted);margin:6px 0}.crew-card strong{font-size:9px;color:var(--cyan)}
+.expedition-fields{display:grid;gap:12px;margin:12px 0 18px}.expedition-fields label{display:grid;gap:7px;color:var(--pink);font-size:10px}
+select{font:12px 'Courier New',monospace;background:#292039;border:1px solid #665179;color:#eee6f7;padding:12px;min-height:44px;max-width:100%;width:100%}
+.journal{list-style:none;margin:8px 0;padding:0}.journal li{font-size:11px;line-height:1.8;padding:14px 0;border-bottom:1px solid var(--line);color:#c9b9da}.journal span{display:block;font-size:8px;color:var(--pink);letter-spacing:1px;margin-bottom:5px}
+@media(max-width:760px){main{padding:16px 12px}header{gap:10px}header>span:not(#save-status){font-size:7px;letter-spacing:1px}header button{font-size:8px;padding:7px}.heading{margin:20px 0 16px}h1{font-size:42px}.crew{padding:8px 6px}.crew span{font-size:8px}.crew small{font-size:6px}canvas.portrait{width:38px;height:70px}.crew em{font-size:6px}.scene-top,.scene-bottom{padding:12px 9px}.scene-top{font-size:8px}.scene-top span:last-child{font-size:7px}aside{padding:0 16px 18px}.hint{font-size:8px;letter-spacing:.5px}.telemetry{padding:18px 0}.telemetry span{font-size:8px}.telemetry p{font-size:9px}.items button{min-height:66px}.copy{font-size:12px}.crew-card canvas.portrait{width:50px;height:92px}#tabs .choice{min-height:44px}.game-layout{gap:12px}}
+@media(max-width:350px){h1{font-size:36px}.crew small{font-size:5px}canvas.portrait{width:30px;height:56px}header a{font-size:24px}.crew span{font-size:7px}.scene-top span:last-child{font-size:6px}}
+
+.crew.four{grid-template-columns:repeat(2,minmax(0,1fr))}

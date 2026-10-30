@@ -32,5 +32,11 @@ final class LastOrbitUITests: XCTestCase {
         survival.name = "iPhone survival day 2"
         survival.lifetime = .keepAlways
         add(survival)
+        app.terminate()
+        app.launch()
+        let resume = app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "RESUME SAVED RUN")).firstMatch
+        XCTAssertTrue(resume.waitForExistence(timeout: 30), "Save must survive a native app relaunch")
+        resume.tap()
+        XCTAssertTrue(app.buttons.matching(NSPredicate(format: "label CONTAINS %@", "Seal the cabin")).firstMatch.waitForExistence(timeout: 10))
     }
 }

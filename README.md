@@ -1,33 +1,45 @@
-# Last Orbit
+# Last Orbit — The Next Chapter
 
-An original, playable space survival prototype for iPhone, inspired by timed scavenging and daily survival decisions. Hand-drawn canvas pixel art uses the supplied reference's purple, cyan, heavy outlines, and tiny expressive characters.
+An offline iPhone space-survival game with original pixel art inspired by the supplied reference: cyan suits, oversized cyan glasses, magenta hair buns, stepped silhouettes, and thick dark outlines.
 
-## Play now
+## Play
 
-Open `web/index.html` in a browser. No installation, server, network connection, or dependencies are needed. On Windows: `Start-Process web/index.html`.
+Open web/index.html in a browser, or build the bundled SwiftUI iPhone app using Xcode on a Mac. No web server or network is required to play.
 
-Pack up to six items within 60 seconds, then launch. The pod starts with 4 rations, 5 oxygen, and 1 part. Every day costs 1 ration and 1 oxygen. Zero supplies can last until the next daily cost; a negative balance ends the run. Keep the hull above zero and build at least 8 signal by the end of day 12 to rescue all three crew members. Buttons show exact decision costs and rewards. Sound is optional.
+Pack six supplies in 60 seconds. The pod launches at zero. Survive twelve daily decisions while managing food, oxygen, scrap, hull integrity, morale, and trust. The packing timer pauses when you leave the app or use Save & Menu.
 
-## Build the iPhone app
+Each day you can perform **one optional crew task** before making the daily log decision: build an upgrade, patch the hull, craft medicine, treat or rest a crew member, or send an expedition. Making the event decision advances the day.
 
-The native SwiftUI app bundles the same offline game in a WKWebView. A Mac with Xcode and XcodeGen is required:
+## What is new
 
-1. Install XcodeGen using `brew install xcodegen`.
-2. Run `xcodegen generate` in this folder.
-3. Open `LastOrbit.xcodeproj` in Xcode.
-4. Select a signing team and your own bundle identifier under Signing & Capabilities.
-5. Choose an iPhone simulator or connected iPhone and run.
+- **Autosave and resume:** supplies, timer, crew health and stress, relationships, story branches, upgrades, chosen course, expedition outcome, and journal are saved after actions. Saves remain on this device. Ending discoveries are collected separately.
+- **Crew personalities:** Mira worries when oxygen is low; Juno brings extra expedition scrap; Bean restores morale at dawn; Sol grows extra food. Each run starts with Mira and two of the other three. Traits stop helping while their owner is away.
+- **Relationships and branching events:** fair treatment builds trust; favoritism and orders can damage it. A courier's crate can bring help or theft depending on trust. With enough trust, invite Nix aboard as a fourth survivor. Four crew consume two rations and two oxygen daily before upgrade effects.
+- **Expeditions:** send a healthy, rested crew member to a freighter, garden moon, or research relay for one or two days. Choose no equipment, a safer tether, or a scanner for extra scrap. Injury returns yield only one scrap. Risks are decided at departure and saved, so reloading cannot reroll them.
+- **Crafting:** the recycler removes oxygen costs on even days; the garden grows one ration per day; the antenna adds signal to transmission choices; the cargo rack raises storage from 18 to 28 and adds two expedition rations. Repairs and medical charges use the same scrap.
+- **Visible consequences:** supply shelves empty, hull cracks spread, upgrades appear in the cabin, injured crew wear bandages, exhausted crew look tired, and absent explorers leave an empty place.
+- **Varied runs:** seeded starting conditions, shuffled supply positions, crew combinations, and randomized event decks.
+- **Four winning endings:** rescue at home, a colony on the garden moon, life with the caravan, or broadcasting the truth about the station. The Course tab shows requirements and lets you plan your route. Requirements are checked after the final daily costs.
 
-The iOS shell is source-only and has not been compiled on this Windows machine. This is a first prototype: no persistence, App Store icons, or distribution signing yet. Reloading starts a new run. The evacuation clock runs while the page is active; this prototype is not designed for background play.
+Food and oxygen can reach zero safely, but falling below zero ends the run. Zero hull also ends the run. Injured crew need treatment before an expedition; stress of five or more also prevents departure. Crew can rest without consuming medical charges. Each upgrade can be installed once; repairs and medical crafting can be repeated on later days.
 
-## GitHub builds and IPA downloads
+Use Save & Menu to pause and return to the briefing. Start a new run there; replacing an active save asks first. Ending collections survive replacing a run. No cloud saves or multiplayer are included.
 
-The `Test and build iPhone game` workflow runs on every push to `main` and can also be started manually. It tests survival rules with Node, plays rescue and failure runs in mobile Chromium and WebKit, and uses a macOS runner to compile and exercise the actual iOS app in an iPhone simulator. Only after these pass does it compile an iPhone device build and publish a prerelease containing `LastOrbit-unsigned.ipa` and its SHA-256 checksum. Browser screenshots and native test results are attached to the workflow run.
+## Build for iPhone
 
-The published IPA is **unsigned**. It needs signing with your own Apple credentials through a suitable sideloading tool before installation. Tapping its download link in Safari does not install it. No Apple credentials or certificates are stored in this repository. App Store/TestFlight distribution requires a separately configured signed build.
+1. On a Mac, install Xcode and XcodeGen (brew install xcodegen).
+2. Run xcodegen generate in this folder and open LastOrbit.xcodeproj.
+3. Select your signing team and bundle identifier.
+4. Choose an iPhone simulator or connected device and run.
 
-## Checks
+The same offline game is bundled inside a persistent WKWebView. Native simulator tests verify launch, daily decisions, and save recovery after terminating and relaunching the app.
 
-Run `node tests/game.test.cjs` for simulation checks covering packing limits, duplicate items, launch, daily resource consumption, insufficient supplies, rescue, and loss conditions.
+## Tests and downloads
 
-To run browser checks locally, install `playwright@1.56.1`, run `npx playwright install chromium webkit`, then `node tests/browser.test.cjs`. Run commands from the repository root. Native simulator checks run through the generated Xcode scheme's Test action.
+Run node tests/game.test.cjs for fifteen simulation suites, including 32 complete seeded rescue campaigns and complete campaigns for all four endings.
+
+For browser tests, install playwright@1.56.1, run npx playwright install chromium webkit, then node tests/browser.test.cjs. Tests exercise phone layouts, packing, upgrades, expeditions, saves, recruitment, timer pausing, invalid-save recovery, and rescue through visible controls. Screenshots are written to test-results.
+
+GitHub Actions runs gameplay and mobile Chromium/WebKit checks, then compiles and tests on an iPhone simulator. It builds the iPhone device app and publishes LastOrbit-unsigned.ipa only after tests pass. Screenshots and native test results are attached to the run.
+
+**The IPA is unsigned.** Sign it with your own Apple credentials through a suitable sideloading tool before installation. Tapping a download link in Safari does not install it. No signing certificates or Apple credentials are included. App Store/TestFlight distribution needs a separately configured signed build.
