@@ -1,0 +1,43 @@
+name: LastOrbit
+options:
+  bundleIdPrefix: com.lastorbit
+  deploymentTarget:
+    iOS: '16.0'
+targets:
+  LastOrbit:
+    type: application
+    platform: iOS
+    sources:
+      - path: ios
+      - path: web
+        type: folder
+        buildPhase: resources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.lastorbit.game
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Last Orbit
+        INFOPLIST_KEY_UILaunchScreen_Generation: YES
+        INFOPLIST_KEY_UISupportedInterfaceOrientations: UIInterfaceOrientationPortrait
+        TARGETED_DEVICE_FAMILY: '1,2'
+        SWIFT_VERSION: '5.0'
+  LastOrbitUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: ios-tests
+    dependencies:
+      - target: LastOrbit
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.lastorbit.game.uitests
+        SWIFT_VERSION: '5.0'
+schemes:
+  LastOrbit:
+    build:
+      targets:
+        LastOrbit: all
+    test:
+      targets:
+        - LastOrbitUITests
