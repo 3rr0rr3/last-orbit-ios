@@ -3,9 +3,9 @@
 'use strict';
 const D=root.OrbitData,ink='#17112d',cyan='#43cde7',pale='#e3daf5';
 function box(c,x,y,w,h,color){c.fillStyle=color;c.fillRect(x,y,w,h);}
-function sprite(c,id,condition='HOLDING ON',wave=true){
+function sprite(c,id,condition='HOLDING ON',wave=true,blink=false){
  const p=D.people[id]||D.people.mira;
- const r=(x,y,w,h,color)=>box(c,x,y,w,h,color);
+ const r=(x,y,w,h,color)=>box(c,x,y,w,h,root.OrbitSettings?.outfit==='starlight'?({'#4a5988':'#716caf','#e79a54':'#9395d8','#74a78a':'#648dc6','#b65b79':'#8169b7','#ded5b8':'#c8c9ed'}[color]||color):color);
  const skin=p.skin||pale;
  function eyes(x=9,y=17){r(x,y,2,2,ink);r(x+7,y,2,2,ink);r(x+3,y+4,3,1,ink);}
  function boots(color){r(7,35,5,9,ink);r(14,35,5,9,ink);r(8,35,3,7,color);r(15,35,3,7,color);r(6,42,7,3,ink);r(14,42,7,3,ink);r(7,43,5,1,'#857894');r(15,43,5,1,'#857894');}
@@ -14,6 +14,8 @@ function sprite(c,id,condition='HOLDING ON',wave=true){
   else{r(18,25,4,10,ink);r(19,26,2,6,sleeve);r(19,32,2,2,skin);}
  }
  function conditionMarks(){
+  if(blink){r(9,17,2,2,skin);r(16,17,2,2,skin);r(9,18,2,1,ink);r(16,18,2,1,ink);}
+
   if(condition==='INJURED'){r(9,29,6,3,'#efe4d2');r(11,29,2,3,'#e1799b');}
   if(condition==='EXHAUSTED'||condition==='GASPING'){r(7,24,12,17,'#17112d33');r(9,18,2,1,ink);r(16,18,2,1,ink);}
   if(condition==='HUNGRY')r(12,21,3,1,ink);
@@ -95,9 +97,15 @@ function scene(t=0,still=false){
  crew.forEach((person,i)=>{
   const[x,y]=spots[i],away=s&&s.expedition&&s.expedition.crew===person.id;
   if(away){r(x+5,207,40,2,'#c991da');c.fillStyle='#d7b5e6';c.font='6px monospace';c.fillText('ON EVA',x+11,204);return;}
+  const sleeping=person.activity==='sleep',working=person.activity==='work';
   const condition=s?E.condition(s,person):'HOLDING ON',bob=reduced()?0:Math.floor(Math.sin(t/650+i)*1.2);
-  c.save();c.translate(x,y+bob);c.scale(2.5,2.5);sprite(c,person.id,condition,i===0||Math.sin(t/1000+i)>.3);c.restore();
+  c.save();c.translate(x,y+(sleeping?5:bob));if(sleeping)c.rotate(-.12);c.scale(2.5,2.5);sprite(c,person.id,condition,!sleeping&&(working||i===0||Math.sin(t/1000+i)>.3),sleeping||!reduced()&&(Math.floor(t/170+i*11)%27===0));c.restore();
+  if(sleeping){c.fillStyle='#c9b8ed';c.font='8px monospace';c.fillText('z Z',x+25,y-5-(reduced()?0:Math.floor(t/400)%3));}
+  if(working){r(x+48,y+52,3,17,'#c8c4df');r(x+45,y+49,9,4,'#c8c4df');}
  });
+ if(s?.upgrades.garden){const growth=Math.min(3,1+Math.floor(s.day/4));for(let i=0;i<3;i++){r(151+i*9,163-growth*2,2,growth*2,'#8ce3b6');r(148+i*9,163-growth*2,8,2,'#8ce3b6');}}
+ if(root.OrbitSettings?.decor==='stars'){for(let i=0;i<4;i++){const x=106+i*43;r(x,78,1,16,ink);r(x-3,94,7,2,'#e4c675');r(x,91,1,8,'#e4c675');}}
+ if(s&&s.air<=2){r(43,94,296,92,!reduced()&&Math.sin(t/260)>0?'#ef79ac24':'#ef79ac10');}
  // Damage and warnings remain visible alongside crew conditions.
  if(s&&s.hull<4){r(251,91,2,13,ink);r(253,101,5,2,ink);r(257,102,2,13,ink);r(259,113,5,2,ink);}
  if(s&&s.hull<2){r(77,89,2,17,ink);r(80,102,7,2,ink);r(85,103,2,14,ink);}

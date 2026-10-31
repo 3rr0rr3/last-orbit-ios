@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const {pathToFileURL}=require('node:url');
 const path=require('node:path'),fs=require('node:fs'),E=require('../web/engine.js');
 const url=pathToFileURL(path.resolve('web/index.html')).href+'?seed=123456789';
-const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade','refuse'],guest:['open'],dinner:['jokes'],storm:['armor','dodge','ride'],market:['listen','trade'],garden:['harvest','course'],ghost:['boost','soft'],radiation:['shield','treat','expose'],argument:['vote'],blackbox:['decode','broadcast','rest'],signal:['beacon','caravan'],final:['all','coords']};
+const priority={derelict:['chart'],alien:['guide'],rescue:['relay'],echo:['record'],cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade','refuse'],guest:['open'],dinner:['jokes'],storm:['armor','dodge','ride'],market:['listen','trade'],garden:['harvest','course'],ghost:['boost','soft'],radiation:['shield','treat','expose'],argument:['vote'],blackbox:['decode','broadcast','rest'],signal:['beacon','caravan'],final:['all','coords']};
 (async()=>{
  fs.mkdirSync('test-results',{recursive:true});
  const engines=process.env.ORBIT_LOCAL_CHROME?[['chromium',chromium]]:[['chromium',chromium],['webkit',webkit]];
@@ -131,7 +131,7 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  for(const viewport of [{width:390,height:844},{width:375,height:667},{width:320,height:568}]){
   await page.setViewportSize(viewport);
   for(const largeText of [false,true]){
-   for(const eventId of ['cargo','dinner','radiation','guest']){
+   for(const eventId of ['cargo','dinner','radiation','guest','derelict','alien','rescue','echo']){
     const sample=E.create(123456789,0);E.launch(sample);sample.day=3;sample.deck[2]=eventId;
     await page.evaluate(({save,largeText})=>{localStorage.setItem('last-orbit-save-v2',save);localStorage.setItem('last-orbit-options-v1',JSON.stringify({sound:false,reduceMotion:true,largeText}));},{save:E.serialize(sample),largeText});
     await page.reload();await page.getByRole('button',{name:'CONTINUE'}).click();
@@ -164,6 +164,14 @@ const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade
  await tab('crew');await tab('log');
  assert.equal(await page.locator('.story-reveal').count(),0,'Reduced motion shows the complete story immediately');
  await page.locator('[data-choice]:enabled').first().click();assert.equal(await page.locator('.day-transition').count(),0,'Reduced motion skips the day transition');
+ await tab('report');assert((await page.locator('#content').textContent()).includes('net supply changes'));assert.equal(await page.locator('#content blockquote').count(),2);
+ await page.locator('#game-options').click();await page.locator('#opt-difficulty').selectOption('relaxed');await page.getByLabel('Ambient sound').check();await page.locator('#opt-outfit').selectOption('starlight');await page.getByRole('button',{name:'DONE',exact:true}).click();
+ const painted=await page.locator('#scene').evaluate(c=>c.toDataURL());await page.locator('#game-options').click();await page.locator('#opt-outfit').selectOption('original');await page.getByRole('button',{name:'DONE',exact:true}).click();assert.notEqual(await page.locator('#scene').evaluate(c=>c.toDataURL()),painted,'Uniform reward changes the rendered crew');
+ await page.getByRole('button',{name:'SAVE & MENU'}).click();await page.getByRole('button',{name:'START GAME'}).click();await page.getByRole('button',{name:'REPLACE & START'}).click();assert.equal((await state()).difficulty,'relaxed');
+ await page.getByRole('button',{name:'LAUNCH ESCAPE POD'}).click();await page.locator('[data-choice="drift"]').click();await tab('report');await shot('daily-report');
+ await page.reload();await page.getByRole('button',{name:'CONTINUE'}).click();assert.equal((await state()).difficulty,'relaxed');await tab('report');assert((await page.locator('#content').textContent()).includes('Day 1 completed'));
+ await page.locator('#game-options').click();assert(await page.getByLabel('Ambient sound').isChecked());assert.equal(await page.locator('#opt-difficulty').inputValue(),'relaxed');await page.locator('#opt-decor').selectOption('stars');await page.getByLabel('Ambient sound').uncheck();await page.getByRole('button',{name:'DONE',exact:true}).click();await tab('log');await shot('expanded-cabin');
+ assert.equal(await page.locator('body').evaluate(el=>el.textContent.includes(String.fromCharCode(65533))),false,'UI text is valid UTF-8');
  assert.deepEqual(errors,[]);
  console.log(name+': title screen, saved options, no-scroll decisions, packing, crafts, crew, expeditions, journal, course, save/resume, complete rescue, ending collection, paused timer, auto-launch, corrupt save recovery, and small phone layout passed.');
  }finally{await browser.close();}

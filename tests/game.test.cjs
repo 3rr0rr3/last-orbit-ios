@@ -3,7 +3,7 @@ const E=require('../web/engine.js');
 let passed=0;
 function test(name,fn){fn();passed++;console.log('PASS '+name);}
 function flight(seed=123456789){const s=E.create(seed,0);for(const id of ['rations','air','tools','wire','filter','battery'])E.pack(s,id);E.launch(s);return s;}
-const priority={cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade','refuse'],guest:['open'],dinner:['jokes'],storm:['armor','dodge','ride'],market:['listen','trade'],garden:['harvest','course'],ghost:['boost','soft'],radiation:['shield','treat','expose'],argument:['vote'],blackbox:['decode','broadcast','rest'],signal:['beacon','caravan'],final:['all','coords']};
+const priority={derelict:['chart'],alien:['guide'],rescue:['relay'],echo:['record'],cargo:['drift'],leak:['patch','seal'],traveler:['welcome','trade','refuse'],guest:['open'],dinner:['jokes'],storm:['armor','dodge','ride'],market:['listen','trade'],garden:['harvest','course'],ghost:['boost','soft'],radiation:['shield','treat','expose'],argument:['vote'],blackbox:['decode','broadcast','rest'],signal:['beacon','caravan'],final:['all','coords']};
 function decide(s){const ev=E.event(s),id=Object.keys(E.events).find(k=>E.events[k]===ev);return priority[id].find(id=>{const c=ev.choices.find(c=>c.id===id);return c&&E.canPay(s,c.cost);});}
 test('same seed repeats crew, supplies, and story; different seeds vary them',()=>{
  const a=E.create(123456789,0),b=E.create(123456789,0);assert.deepEqual(a,b);
@@ -106,6 +106,30 @@ test('all four endings can be earned in full campaigns without changing resource
  }
  assert.equal(s.outcome.id,route);
  }
+});
+
+test('daily reports include repairs, decisions, consumption and saved memories',()=>{
+ const s=E.create(123456789,0);s.hull=3;E.pack(s,'tools');E.launch(s);const initial={food:s.food,air:s.air,parts:s.parts,hull:s.hull};
+ E.craft(s,'repair');assert(s.crew.some(c=>c.activity==='work'));E.choose(s,'catch');
+ for(const k of Object.keys(initial))assert.equal(s.report.changes[k],s[k]-initial[k]);
+ assert(s.report.entries.some(e=>e.includes('Patch the hull')));assert.equal(s.report.day,1);assert.equal(s.conversations.length,2);assert(s.crew.some(c=>c.memory==='Catch the capsule'));
+ assert(Object.values(s.bonds).some(n=>n>0));const loaded=E.load(E.serialize(s));assert(loaded);assert.deepEqual(loaded.report,s.report);assert.deepEqual(loaded.bonds,s.bonds);
+ const c=E.active(s)[0];c.stress=3;const trust=c.trust;E.rest(s,c.id);assert.equal(c.activity,'sleep');assert.equal(c.trust,Math.min(8,trust+1));assert(c.memory.includes('rest'));
+});
+test('Relaxed difficulty is saved and supplies gentler survival rules',()=>{
+ const a=E.create(91,0),b=E.create(91,0,{difficulty:'relaxed'});
+ assert.equal(b.food,a.food+4);assert.equal(b.air,a.air+4);assert.equal(b.parts,a.parts+2);
+ E.launch(b);b.deck[0]='radiation';E.choose(b,'expose');assert(b.crew.every(c=>c.health===3));assert.equal(E.load(E.serialize(b)).difficulty,'relaxed');
+ const old=flight();for(const key of ['difficulty','report','conversations','bonds','dayStart'])delete old[key];assert(E.load(JSON.stringify(old)),'Existing v2 saves still load');
+ for(const mutate of [s=>s.difficulty='unknown',s=>s.bonds={'mira:juno':999},s=>s.report={day:1,changes:{},entries:[]},s=>s.crew[0].activity='invalid']){const s=flight();mutate(s);assert.equal(E.load(JSON.stringify(s)),null);}
+});
+test('expanded encounters support complete deterministic campaigns on both difficulties',()=>{
+ const seen=new Set();for(const difficulty of ['survival','relaxed'])for(let seed=1;seed<=64;seed++){
+ const s=E.create(seed*1234567,0,{difficulty,variety:true}),copy=E.create(seed*1234567,0,{difficulty,variety:true});assert.deepEqual(s.deck,copy.deck);s.deck.forEach(id=>seen.add(id));
+ for(const id of ['rations','air','tools','wire','filter','battery'])E.pack(s,id);E.launch(s);
+ while(s.phase==='survive'){if(s.day===1)E.craft(s,'garden');if(s.day===2)E.craft(s,'recycler');if(s.day===3)E.craft(s,'antenna');assert(E.choose(s,decide(s)));assert(E.load(E.serialize(s)));}
+ assert.equal(s.outcome.id,'home','Expanded campaign '+difficulty+' '+seed);
+ }for(const id of ['derelict','alien','rescue','echo'])assert(seen.has(id));
 });
 
 console.log(passed+' simulation suites passed.');

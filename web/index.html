@@ -26,8 +26,13 @@
  <div class="dialog-head"><h2 id="options-heading">Options</h2><button type="button" id="close-options" aria-label="Close options">CLOSE</button></div>
  <p class="copy">Make this orbit comfortable. Settings stay on this device.</p>
  <label class="option-row" for="opt-sound"><span><b>Sound effects</b><small>Quiet little bleeps for your decisions.</small></span><input type="checkbox" id="opt-sound"></label>
- <label class="option-row" for="opt-motion"><span><b>Reduced motion</b><small>Keep the cabin and crew still.</small></span><input type="checkbox" id="opt-motion"></label>
+ <label class="option-row" for="opt-motion"><span><b>Reduced motion</b><small>Skip movement and text transitions.</small></span><input type="checkbox" id="opt-motion"></label>
  <label class="option-row" for="opt-text"><span><b>Larger text</b><small>Make stories and choices easier to read.</small></span><input type="checkbox" id="opt-text"></label>
+ <label class="option-row" for="opt-ambient"><span><b>Ambient sound</b><small>Engine hum, radio static, and supply warnings.</small></span><input type="checkbox" id="opt-ambient"></label>
+ <label class="option-select">New game difficulty<select id="opt-difficulty"><option value="survival">Survival · original resource challenge</option><option value="relaxed">Relaxed · extra supplies, gentler injuries</option></select><small>Applies to your next run. Relaxed starts with +4 food, +4 oxygen, +2 scrap; injuries from sheltering are avoided and four crew use one daily ration and oxygen.</small></label>
+ <label class="option-select">Crew outfits<select id="opt-outfit"><option value="original">Original uniforms</option><option value="starlight">Starlight uniforms</option></select><small id="outfit-lock"></small></label>
+ <label class="option-select">Cabin decoration<select id="opt-decor"><option value="none">Bare cabin</option><option value="stars">Hanging stars</option></select><small id="decor-lock"></small></label>
+ <p id="achievement-list" class="copy"></p>
  <details><summary>How to play</summary><p>Pack up to six items, then launch. Each day you may build, treat, rest, or explore once. Return to Log and choose a response to advance the day. Choose your ending in Course. Save &amp; Menu pauses packing and keeps your run.</p></details>
  <button type="button" class="primary" id="done-options">DONE</button>
 </dialog>

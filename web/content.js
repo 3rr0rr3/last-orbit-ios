@@ -66,6 +66,13 @@ const events={
  final:{title:'The final orbit.',text:'The searchlight sweeps the dark. Finish your preparations, choose your course, and make one final transmission.',choices:[
  c('all','Broadcast everything',{air:1},{signal:2}),c('coords','Send coordinates',{}, {signal:1})]}
 };
+
+Object.assign(events,{
+ derelict:{title:'The ship with no lights.',text:'An abandoned passenger liner turns slowly beside you. A pantry light flickers deep inside, but the docking collar is cracked.',choices:[c('salvage','Send a tethered salvage team',{air:2,parts:1},{food:5,parts:2},{stress:1}),c('chart','Chart a safe route around it',{}, {signal:1})]},
+ alien:{title:'A passenger made of light.',text:'A small luminous creature clings to the window. Sol thinks it is frightened. Its glow pulses whenever someone speaks.',choices:[c('shelter','Give it a warm corner',{food:1},{morale:2,trust:1},{stress:-1}),c('guide','Guide it to a nearby comet',{}, {signal:1,morale:1})]},
+ rescue:{title:'One suit. A fading beacon.',text:'A stranded pilot has minutes of air left. A rescue will cost precious oxygen. Everyone waits for your answer.',choices:[c('rescue','Bring the pilot to safety',{air:2},{trust:2,signal:2},{stress:1}),c('relay','Relay the distress signal',{}, {signal:1,trust:1})]},
+ echo:{title:'A message dated tomorrow.',text:'The radio plays your own distress call, followed by coordinates you have never sent. A broken navigation buoy might explain it.',choices:[c('trace','Trace the strange transmission',{parts:1},{clues:1,signal:2}),c('record','Record it and keep moving',{}, {signal:1})]}
+});
 const data={people,items,recipes,places,events};
 if(typeof module!=='undefined'&&module.exports)module.exports=data;else root.OrbitData=data;
 })(typeof window!=='undefined'?window:globalThis);

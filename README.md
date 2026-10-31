@@ -36,7 +36,7 @@ The same offline game is bundled inside a persistent WKWebView. Native simulator
 
 ## Tests and downloads
 
-Run node tests/game.test.cjs for fifteen simulation suites, including 32 complete seeded rescue campaigns and complete campaigns for all four endings.
+Run node tests/game.test.cjs for eighteen simulation suites, including 32 complete seeded rescue campaigns and complete campaigns for all four endings.
 
 For browser tests, install playwright@1.56.1, run npx playwright install chromium webkit, then node tests/browser.test.cjs. Tests exercise phone layouts, packing, upgrades, expeditions, saves, recruitment, timer pausing, invalid-save recovery, and rescue through visible controls. Screenshots are written to test-results.
 
@@ -53,3 +53,16 @@ Build and Course use compact grids. Crew profiles use Previous/Next controls. Ex
 The new native app icon is in ios/Assets.xcassets/AppIcon.appiconset/AppIcon.png (1024 square, opaque RGB). A smaller copy is used on the title screen and for browser icons. The icon was created with the built-in image_gen tool; the final prompt and export details are in docs/icon-prompt.txt.
 
 Browser checks explicitly verify that choices and task controls fit on 390×844, 375×667, and 320×568 screens, both with standard and larger text. Native iPhone tests reach Start Game, Launch, and daily choices without swipe gestures, then verify save recovery after relaunch.
+
+
+## Living cabin update (1.3)
+
+Crew react to decisions in the log and Report tab. Their latest decision or care memory and shared relationship appear in Crew; friendships strengthen with fair choices and arguments strain them. Working and resting crew have distinct poses, blinking and breathing animate the cabin, low oxygen tints and flickers the lighting, and garden plants grow through the run. Reduced Motion keeps these effects still.
+
+Report shows the previous day's net resource changes, repairs, consumption, and explorer returns, with a short supply summary during the day transition. Four new encounters bring an abandoned liner, a luminous alien passenger, a stranded pilot, and a mysterious future transmission into new runs. Existing saved decks continue normally.
+
+Options includes separate ambient audio (engine hum, radio static, low-supply alarms) and sound effects. Audio stops on the title screen and when the app is hidden. Difficulty applies to new games: Survival retains original costs; Relaxed starts with four extra food, four oxygen and two scrap, prevents radiation-shelter injury, and keeps four-crew daily consumption at one before upgrades. Expedition risks still apply.
+
+Build an upgrade, reach day six, recruit Nix, or win an ending to earn four persistent achievements. Any achievement unlocks Starlight uniforms; day six or a winning ending unlocks hanging stars. Select earned cosmetics in Options. Rewards and ending discoveries survive starting a new run. Existing version-two saves remain supported.
+
+Validation includes 128 expanded rescue campaigns across both difficulties, all four encounter types, reports and relationship persistence, old saves, unlock selection, audio settings, and phone controls at standard and larger text sizes.
